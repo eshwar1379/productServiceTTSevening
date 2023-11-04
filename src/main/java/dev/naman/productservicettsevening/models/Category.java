@@ -1,13 +1,14 @@
 package dev.naman.productservicettsevening.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -17,6 +18,24 @@ public class Category extends BaseModel {
     private String name;
 //    @Column
     private String description;
-    @OneToMany(mappedBy = "category")
-    private List<Product> products;
+//    private Dummy dummy;
+
+    // C : P
+    // 1 : m
+    // 1 : 1
+    // 1 : m
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "category", cascade = {CascadeType.REMOVE})
+    @Fetch(FetchMode.SELECT)
+    @BatchSize(size = 1)
+    private Set<Product> products;
+
+//    @OneToOne
+//    @OneToMany
+//    @ManyToOne
+//    @ManyToMany
+
 }
+
+// FetchModes allow to solve how a associated object is fetched
+// Spring Data JPA modifies the behaviour of FetchModes a lot
